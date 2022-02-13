@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32002.185
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.API", "Lyrics.API\Lyrics.API.csproj", "{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.MusicBrainz", "MusicBrainz\Lyrics.MusicBrainz.csproj", "{B49EA171-AA31-4E35-9063-24224D05D45B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Common", "Lyrics.Common\Lyrics.Common.csproj", "{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.API.Tests", "Lyrics.API.Tests\Lyrics.API.Tests.csproj", "{CE8D6353-CE74-48F0-8B03-837026C01154}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.MusicBrainz.Tests", "Lyrics.MusicBrainz.Tests\Lyrics.MusicBrainz.Tests.csproj", "{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C1A2C49D-82B8-49F5-9994-68C3E67D0558}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B49EA171-AA31-4E35-9063-24224D05D45B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B49EA171-AA31-4E35-9063-24224D05D45B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B49EA171-AA31-4E35-9063-24224D05D45B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B49EA171-AA31-4E35-9063-24224D05D45B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE8D6353-CE74-48F0-8B03-837026C01154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE8D6353-CE74-48F0-8B03-837026C01154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE8D6353-CE74-48F0-8B03-837026C01154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE8D6353-CE74-48F0-8B03-837026C01154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F58F5F89-B152-401A-84E7-DB4EA2DE6BA1}
+	EndGlobalSection
+EndGlobal
