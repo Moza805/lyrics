@@ -15,5 +15,12 @@ namespace Lyrics.Common.Interfaces
         /// <param name="name">Artist to search for</param>
         /// <returns>A collection of artists that match the search term</returns>
         Task<IEnumerable<Artist>> FindArtistsByNameAsync(string name);
+
+        /// <summary>
+        /// Get all songs by an artist
+        /// </summary>
+        /// <param name="artistId">Globally unique identifier for the artist in whichever system you are sourcing data from</param>
+        /// <returns>A collection of songs</returns>
+        Task<IEnumerable<Song>> GetSongsByArtistAsync(Guid artistId);
     }
 }

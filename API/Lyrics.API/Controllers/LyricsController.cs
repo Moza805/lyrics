@@ -5,7 +5,7 @@ using System.Net;
 namespace Lyrics.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/")]
     public class LyricsController : ControllerBase
     {
         private readonly IArtistService _artistService;
@@ -15,12 +15,26 @@ namespace Lyrics.API.Controllers
             _artistService = artistService;
         }
 
-        [HttpGet("SearchByName/{artist}")]
-        public async Task<IActionResult> SearchByName(string artist)
+        [HttpGet("SearchArtistsByName/{artist}")]
+        public async Task<IActionResult> SearchArtistsByNameAsync(string artist)
         {
             try
             {
                 var result = await _artistService.FindArtistsByNameAsync(artist);
+                return Ok(result);
+            }
+            catch
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet("GetSongsForArtist/{artistId}")]
+        public async Task<IActionResult> GetSongsForArtistAsync(Guid artistId)
+        {
+            try
+            {
+                var result = await _artistService.GetSongsByArtistAsync(artistId);
                 return Ok(result);
             }
             catch

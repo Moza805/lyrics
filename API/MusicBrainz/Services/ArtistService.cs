@@ -1,6 +1,7 @@
 ﻿using Lyrics.Common.Exceptions;
 using Lyrics.Common.Interfaces;
 using Lyrics.Common.Models;
+using Lyrics.MusicBrainz.Constants;
 using Lyrics.MusicBrainz.Models;
 using System.Text.Json;
 using System.Web;
@@ -17,6 +18,8 @@ namespace Lyrics.MusicBrainz.Services
         private readonly Version _version;
         private readonly string _contactEmail;
         private readonly HttpClient _httpClient;
+
+        JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 
         /// <summary>
         /// New up an instance of this service
@@ -50,9 +53,30 @@ namespace Lyrics.MusicBrainz.Services
                 {
                     httpResponse.EnsureSuccessStatusCode();
                     var responseString = await httpResponse.Content.ReadAsStringAsync();
-                    var responseData = JsonSerializer.Deserialize<ArtistSearchResponse>(responseString, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                    var responseData = JsonSerializer.Deserialize<ArtistSearchResponse>(responseString, _jsonSerializerOptions);
 
                     return responseData.Artists.Select((artist) => new Common.Models.Artist(artist.Id, artist.Name, artist.Type, artist.Disambiguation));
+                }
+                catch (Exception ex)
+                {
+                    throw new ThirdPartyServiceException("Failed to call MusicBrainz API", ex);
+                }
+            }
+        }
+
+        public async Task<IEnumerable<Song>> GetSongsByArtistAsync(Guid artistId)
+        {
+            var url = $"https://musicbrainz.org/ws/2/work/?artist={artistId}&limit=1000&inc=artist-rels";
+
+            using (HttpResponseMessage httpResponse = _httpClient.GetAsync(url).Result)
+            {
+                try
+                {
+                    httpResponse.EnsureSuccessStatusCode();
+                    var responseString = await httpResponse.Content.ReadAsStringAsync();
+                    var responseData = JsonSerializer.Deserialize<SongListResponse>(responseString, _jsonSerializerOptions);
+
+                    return responseData.Works.Where((work) => work.Type == WorkConstants.WorkTypes.Song).Select((work) => new Song(work.Id, work.Title));
                 }
                 catch (Exception ex)
                 {
