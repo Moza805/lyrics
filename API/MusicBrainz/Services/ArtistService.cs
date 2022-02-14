@@ -4,7 +4,7 @@ using Lyrics.Common.Models;
 using Lyrics.MusicBrainz.Constants;
 using Lyrics.MusicBrainz.Models;
 using System.Net;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Web;
 
 namespace Lyrics.MusicBrainz.Services
@@ -15,28 +15,15 @@ namespace Lyrics.MusicBrainz.Services
     /// <seealso cref="https://musicbrainz.org/doc/MusicBrainz_API"/>
     public sealed class ArtistService : IArtistService
     {
-        private readonly string _applicationName;
-        private readonly Version _version;
-        private readonly string _contactEmail;
         private readonly HttpClient _httpClient;
-
-        JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 
         /// <summary>
         /// New up an instance of this service
         /// </summary>
-        /// <param name="applicationName">How your application should present to the MusicBrainz API</param>
-        /// <param name="version">Version of calling assembly</param>
-        /// <param name="contactEmail">Contact details to pass to MusicBrainz</param>
-        public ArtistService(string applicationName, Version version, string contactEmail, HttpClient httpClient)
+        /// <param name="httpClient"></param>
+        public ArtistService(HttpClient httpClient)
         {
-            _applicationName = applicationName;
-            _version = version;
-            _contactEmail = contactEmail;
             _httpClient = httpClient;
-
-            httpClient.DefaultRequestHeaders.Add("User-Agent", $"{applicationName}/${version} (${_contactEmail})");
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
         /// <summary>
@@ -46,14 +33,11 @@ namespace Lyrics.MusicBrainz.Services
         /// <returns>A collection of artists that match the search term</returns>
         public async Task<IEnumerable<Common.Models.Artist>> FindArtistsByNameAsync(string name)
         {
-            var url = $"https://musicbrainz.org/ws/2/artist/?query=artist:{HttpUtility.UrlEncode(name)}";
+            var url = $"ws/2/artist/?query=artist:{HttpUtility.UrlEncode(name)}";
 
             try
             {
-                var httpResponse = await _httpClient.GetAsync(url);
-                httpResponse.EnsureSuccessStatusCode();
-                var responseString = await httpResponse.Content.ReadAsStringAsync();
-                var responseData = JsonSerializer.Deserialize<ArtistSearchResponse>(responseString, _jsonSerializerOptions);
+                var responseData = await _httpClient.GetFromJsonAsync<ArtistSearchResponse>(url);
 
                 return responseData.Artists.Select((artist) => new Common.Models.Artist(artist.Id, artist.Name, artist.Type, artist.Disambiguation));
             }
@@ -63,7 +47,6 @@ namespace Lyrics.MusicBrainz.Services
             }
         }
 
-
         /// <summary>
         /// Get all songs by an artist
         /// </summary>
@@ -72,14 +55,11 @@ namespace Lyrics.MusicBrainz.Services
         /// <exception cref="ThirdPartyServiceException">MusicBrainz server problems, see inner exception.</exception>
         public async Task<IEnumerable<Song>> GetSongsByArtistAsync(Guid artistId)
         {
-            var url = $"https://musicbrainz.org/ws/2/work/?artist={artistId}&limit=1000&inc=artist-rels";
+            var url = $"ws/2/work/?artist={artistId}&limit=1000&inc=artist-rels";
 
             try
             {
-                var httpResponse = await _httpClient.GetAsync(url);
-                httpResponse.EnsureSuccessStatusCode();
-                var responseString = await httpResponse.Content.ReadAsStringAsync();
-                var responseData = JsonSerializer.Deserialize<SongListResponse>(responseString, _jsonSerializerOptions);
+                var responseData = await _httpClient.GetFromJsonAsync<SongListResponse>(url);
 
                 return responseData.Works.Where((work) => work.Type == WorkConstants.WorkTypes.Song).Select((work) => new Song(work.Id, work.Title));
             }
@@ -89,6 +69,33 @@ namespace Lyrics.MusicBrainz.Services
                 {
                     case HttpStatusCode.NotFound:
                         return new List<Song>();
+                    case HttpStatusCode.InternalServerError:
+                    default:
+                        throw new ThirdPartyServiceException("Failed to call MusicBrainz API", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get details about a given artist
+        /// </summary>
+        /// <param name="artistId">Globally unique identifier for the artist in whichever system you are sourcing data from</param>
+        /// <returns>Artist details</returns>
+        public async Task<Common.Models.Artist> GetArtistByIdAsync(Guid artistId)
+        {
+            var url = $"ws/2/artist/{artistId}";
+
+            try
+            {
+                var responseData = await _httpClient.GetFromJsonAsync<ArtistResponse>(url);
+                return new Common.Models.Artist(responseData.Id, responseData.Name, responseData.Type, responseData.Disambiguation);
+            }
+            catch (HttpRequestException ex)
+            {
+                switch (ex.StatusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        throw new ArtistNotFoundException(artistId);
                     case HttpStatusCode.InternalServerError:
                     default:
                         throw new ThirdPartyServiceException("Failed to call MusicBrainz API", ex);

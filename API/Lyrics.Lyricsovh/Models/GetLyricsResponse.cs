@@ -20,6 +20,16 @@ namespace Lyrics.Lyricsovh.Models
         /// Line by line lyrics
         /// </summary>
         [JsonIgnore]
-        public string[] Lines { get => Lyrics.Split("\r\n"); }
+        public string[] Lines
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Lyrics))
+                {
+                    return Array.Empty<string>();
+                }
+                return Lyrics.Split("\r\n");
+            }
+        }
     }
 }

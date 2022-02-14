@@ -22,5 +22,12 @@ namespace Lyrics.Common.Interfaces
         /// <param name="artistId">Globally unique identifier for the artist in whichever system you are sourcing data from</param>
         /// <returns>A collection of songs</returns>
         Task<IEnumerable<Song>> GetSongsByArtistAsync(Guid artistId);
+
+        /// <summary>
+        /// Get details about a given artist
+        /// </summary>
+        /// <param name="artistId">Globally unique identifier for the artist in whichever system you are sourcing data from</param>
+        /// <returns>Artist details</returns>
+        Task<Artist> GetArtistByIdAsync(Guid artistId);
     }
 }

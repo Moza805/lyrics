@@ -3,6 +3,7 @@ using Lyrics.Lyricsovh.Models;
 using Lyrics.Lyricsovh.Services;
 using Lyrics.Lyricsovh.Tests.Helpers;
 using NUnit.Framework;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -23,6 +24,7 @@ namespace Lyrics.Lyricsovh.Tests.Services
             var mockedResponse = MockHttpMessageHandler.MockResponse(lyrics, HttpStatusCode.OK);
 
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
             var service = new LyricsService(httpClient);
@@ -39,6 +41,7 @@ namespace Lyrics.Lyricsovh.Tests.Services
             var mockedResponse = MockHttpMessageHandler.MockResponse("Oh no, an error!", HttpStatusCode.InternalServerError);
 
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
             var service = new LyricsService(httpClient);
@@ -54,6 +57,7 @@ namespace Lyrics.Lyricsovh.Tests.Services
             var mockedResponse = MockHttpMessageHandler.MockResponse(JsonSerializer.Serialize("{\"error\":\"No lyrics found\"}"), HttpStatusCode.NotFound);
 
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
             var service = new LyricsService(httpClient);

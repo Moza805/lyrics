@@ -17,8 +17,8 @@ namespace Lyrics.MusicBrainz.Tests.Services
 {
     public class ArtistServiceTests
     {
-
         #region FindArtistsByNameAsync
+
         [Test]
         public async Task FindArtistsByNameAsync_ReturnsData()
         {
@@ -34,9 +34,10 @@ namespace Lyrics.MusicBrainz.Tests.Services
 
             var mockedResponse = MockHttpMessageHandler.MockResponse(musicBrainsResponse, HttpStatusCode.OK);
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
-            var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+            var service = new ArtistService(httpClient);
             var result = (await service.FindArtistsByNameAsync("Bonobo")).ToList();
 
             // Assert
@@ -51,9 +52,10 @@ namespace Lyrics.MusicBrainz.Tests.Services
         {
             var mockedResponse = MockHttpMessageHandler.MockResponse("Oh no, an error", HttpStatusCode.InternalServerError);
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
-            var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+            var service = new ArtistService(httpClient);
             Assert.ThrowsAsync<ThirdPartyServiceException>(async () => await service.FindArtistsByNameAsync("Bonobo"));
         }
 
@@ -76,9 +78,10 @@ namespace Lyrics.MusicBrainz.Tests.Services
 
             var mockedResponse = MockHttpMessageHandler.MockResponse(musicBrainsResponse, HttpStatusCode.OK);
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
-            var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+            var service = new ArtistService(httpClient);
             var result = (await service.GetSongsByArtistAsync(artistGuid)).ToList();
 
             // Assert
@@ -104,9 +107,10 @@ namespace Lyrics.MusicBrainz.Tests.Services
 
             var mockedResponse = MockHttpMessageHandler.MockResponse(musicBrainsResponse, HttpStatusCode.OK);
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
-            var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+            var service = new ArtistService(httpClient);
             var result = (await service.GetSongsByArtistAsync(artistGuid)).ToList();
 
             // Assert
@@ -122,9 +126,10 @@ namespace Lyrics.MusicBrainz.Tests.Services
             var artistGuid = Guid.NewGuid();
             var mockedResponse = MockHttpMessageHandler.MockResponse("Oh no, an error", HttpStatusCode.InternalServerError);
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
-            var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+            var service = new ArtistService(httpClient);
 
             // Assert
             Assert.ThrowsAsync<ThirdPartyServiceException>(async () => await service.GetSongsByArtistAsync(artistGuid));
@@ -137,13 +142,77 @@ namespace Lyrics.MusicBrainz.Tests.Services
             var artistGuid = Guid.NewGuid();
             var mockedResponse = MockHttpMessageHandler.MockResponse("Unrecognised Id", HttpStatusCode.NotFound);
             var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
 
             // Test
-            var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+            var service = new ArtistService(httpClient);
             var result = await service.GetSongsByArtistAsync(artistGuid);
 
             // Assert
             Assert.That(result.Count, Is.EqualTo(0));
+        }
+
+        #endregion
+
+        #region GetArtistByIdAsync
+
+        public async Task GetArtistByIdAsync_ReturnsData()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var musicBrainsResponse = new Artist
+            {
+                Id = Guid.NewGuid(),
+                Name = "Daft Punk",
+                Disambiguation = "French electronic dance",
+                Type = ArtistConstants.ArtistTypes.Group
+            };
+
+            var mockedResponse = MockHttpMessageHandler.MockResponse(musicBrainsResponse, HttpStatusCode.OK);
+            var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
+
+            // Test
+            var service = new ArtistService(httpClient);
+            var result = await service.GetArtistByIdAsync(artistGuid);
+
+            // Assert
+            Assert.AreEqual(musicBrainsResponse.Id, result.Id);
+            Assert.AreEqual(musicBrainsResponse.Name, result.Name);
+            Assert.AreEqual(musicBrainsResponse.Disambiguation, result.Disambiguation);
+            Assert.AreEqual(musicBrainsResponse.Type, result.Type);
+        }
+
+        [Test]
+        public void GetArtistByIdAsync_HandlesThirdParty500()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var mockedResponse = MockHttpMessageHandler.MockResponse("Oh no, an error", HttpStatusCode.InternalServerError);
+            var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
+
+            // Test
+            var service = new ArtistService(httpClient);
+
+            // Assert
+            Assert.ThrowsAsync<ThirdPartyServiceException>(async () => await service.GetArtistByIdAsync(artistGuid));
+        }
+
+        [Test]
+        public async Task GetArtistByIdAsync_HandlesInvalidId()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var mockedResponse = MockHttpMessageHandler.MockResponse("Unrecognised Id", HttpStatusCode.NotFound);
+            var httpClient = new HttpClient(mockedResponse.Object);
+            httpClient.BaseAddress = new Uri("https://localhost:3000");
+
+            // Test
+            var service = new ArtistService(httpClient);
+
+            // Assert
+            Assert.ThrowsAsync<ArtistNotFoundException>(async () => await service.GetArtistByIdAsync(artistGuid));
         }
 
         #endregion

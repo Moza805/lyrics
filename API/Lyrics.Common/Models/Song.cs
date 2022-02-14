@@ -11,6 +11,10 @@ namespace Lyrics.Common.Models
         public Guid Id { get; set; }
         public string Title { get; set; }
 
+        public string Lyrics { get; set; }
+
+        public int WordCount { get => string.IsNullOrEmpty(Lyrics) ? 0 : Lyrics.Replace("\r\n", " ").Split(' ').Count(); }
+
         public Song(Guid id, string title)
         {
             Id = id;

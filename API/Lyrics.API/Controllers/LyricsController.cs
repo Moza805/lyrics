@@ -10,11 +10,13 @@ namespace Lyrics.API.Controllers
     {
         private readonly IArtistService _artistService;
         private readonly ILyricsService _lyricsService;
+        private readonly IStatisticsService _statisticsService;
 
-        public LyricsController(IArtistService artistService, ILyricsService lyricsService)
+        public LyricsController(IArtistService artistService, ILyricsService lyricsService, IStatisticsService statisticsService)
         {
             _artistService = artistService;
             _lyricsService = lyricsService;
+            _statisticsService = statisticsService;
         }
 
         [HttpGet("SearchArtistsByName/{artist}")]
@@ -51,6 +53,20 @@ namespace Lyrics.API.Controllers
             try
             {
                 var result = await _lyricsService.GetLyricsForSongAsync(artist, song);
+                return Ok(result);
+            }
+            catch
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet("GetStatisticsForArtist/{artistId}")]
+        public async Task<IActionResult> GetStatisticsForArtistAsync(Guid artistId)
+        {
+            try
+            {
+                var result = await _statisticsService.GetStatistics(artistId);
                 return Ok(result);
             }
             catch
