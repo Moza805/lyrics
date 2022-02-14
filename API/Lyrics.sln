@@ -4,19 +4,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.API", "Lyrics.API\Lyrics.API.csproj", "{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D3B68C0E-61BF-4354-AD8D-5F0FD7119682} = {D3B68C0E-61BF-4354-AD8D-5F0FD7119682}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.MusicBrainz", "MusicBrainz\Lyrics.MusicBrainz.csproj", "{B49EA171-AA31-4E35-9063-24224D05D45B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.MusicBrainz", "MusicBrainz\Lyrics.MusicBrainz.csproj", "{B49EA171-AA31-4E35-9063-24224D05D45B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Common", "Lyrics.Common\Lyrics.Common.csproj", "{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.Common", "Lyrics.Common\Lyrics.Common.csproj", "{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.API.Tests", "Lyrics.API.Tests\Lyrics.API.Tests.csproj", "{CE8D6353-CE74-48F0-8B03-837026C01154}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.API.Tests", "Lyrics.API.Tests\Lyrics.API.Tests.csproj", "{CE8D6353-CE74-48F0-8B03-837026C01154}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.MusicBrainz.Tests", "Lyrics.MusicBrainz.Tests\Lyrics.MusicBrainz.Tests.csproj", "{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.MusicBrainz.Tests", "Lyrics.MusicBrainz.Tests\Lyrics.MusicBrainz.Tests.csproj", "{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C1A2C49D-82B8-49F5-9994-68C3E67D0558}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Lyricsovh", "Lyrics.Lyricsovh\Lyrics.Lyricsovh.csproj", "{D3B68C0E-61BF-4354-AD8D-5F0FD7119682}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Lyricsovh.Tests", "Lyrics.Lyricsovh.Tests\Lyrics.Lyricsovh.Tests.csproj", "{1DF505E9-67DB-4F14-8EA5-4EB9767A4CF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +51,14 @@ Global
 		{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7DB716E-2CF9-4FAE-8BCC-C970FCCD9EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3B68C0E-61BF-4354-AD8D-5F0FD7119682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B68C0E-61BF-4354-AD8D-5F0FD7119682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B68C0E-61BF-4354-AD8D-5F0FD7119682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B68C0E-61BF-4354-AD8D-5F0FD7119682}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DF505E9-67DB-4F14-8EA5-4EB9767A4CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF505E9-67DB-4F14-8EA5-4EB9767A4CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF505E9-67DB-4F14-8EA5-4EB9767A4CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF505E9-67DB-4F14-8EA5-4EB9767A4CF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

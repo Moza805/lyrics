@@ -125,7 +125,25 @@ namespace Lyrics.MusicBrainz.Tests.Services
 
             // Test
             var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+
+            // Assert
             Assert.ThrowsAsync<ThirdPartyServiceException>(async () => await service.GetSongsByArtistAsync(artistGuid));
+        }
+
+        [Test]
+        public async Task GetSongsByArtistAsync_HandlesInvalidId()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var mockedResponse = MockHttpMessageHandler.MockResponse("Unrecognised Id", HttpStatusCode.NotFound);
+            var httpClient = new HttpClient(mockedResponse.Object);
+
+            // Test
+            var service = new ArtistService("test-name", new System.Version(1, 0, 0), "test@email.test", httpClient);
+            var result = await service.GetSongsByArtistAsync(artistGuid);
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(0));
         }
 
         #endregion

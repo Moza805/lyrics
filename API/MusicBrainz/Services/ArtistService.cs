@@ -3,6 +3,7 @@ using Lyrics.Common.Interfaces;
 using Lyrics.Common.Models;
 using Lyrics.MusicBrainz.Constants;
 using Lyrics.MusicBrainz.Models;
+using System.Net;
 using System.Text.Json;
 using System.Web;
 
@@ -12,7 +13,7 @@ namespace Lyrics.MusicBrainz.Services
     /// Provides information on artists. Data is sourced from MusicBrainz API
     /// </summary>
     /// <seealso cref="https://musicbrainz.org/doc/MusicBrainz_API"/>
-    public class ArtistService : IArtistService
+    public sealed class ArtistService : IArtistService
     {
         private readonly string _applicationName;
         private readonly Version _version;
@@ -47,40 +48,50 @@ namespace Lyrics.MusicBrainz.Services
         {
             var url = $"https://musicbrainz.org/ws/2/artist/?query=artist:{HttpUtility.UrlEncode(name)}";
 
-            using (HttpResponseMessage httpResponse = _httpClient.GetAsync(url).Result)
-            { 
-                try
-                {
-                    httpResponse.EnsureSuccessStatusCode();
-                    var responseString = await httpResponse.Content.ReadAsStringAsync();
-                    var responseData = JsonSerializer.Deserialize<ArtistSearchResponse>(responseString, _jsonSerializerOptions);
+            try
+            {
+                var httpResponse = await _httpClient.GetAsync(url);
+                httpResponse.EnsureSuccessStatusCode();
+                var responseString = await httpResponse.Content.ReadAsStringAsync();
+                var responseData = JsonSerializer.Deserialize<ArtistSearchResponse>(responseString, _jsonSerializerOptions);
 
-                    return responseData.Artists.Select((artist) => new Common.Models.Artist(artist.Id, artist.Name, artist.Type, artist.Disambiguation));
-                }
-                catch (Exception ex)
-                {
-                    throw new ThirdPartyServiceException("Failed to call MusicBrainz API", ex);
-                }
+                return responseData.Artists.Select((artist) => new Common.Models.Artist(artist.Id, artist.Name, artist.Type, artist.Disambiguation));
+            }
+            catch (Exception ex)
+            {
+                throw new ThirdPartyServiceException("Failed to call MusicBrainz API", ex);
             }
         }
 
+
+        /// <summary>
+        /// Get all songs by an artist
+        /// </summary>
+        /// <param name="artistId">Globally unique identifier for the artist in whichever system you are sourcing data from</param>
+        /// <returns>A collection of songs or empty list if no match on <paramref name="artistId"/></returns>
+        /// <exception cref="ThirdPartyServiceException">MusicBrainz server problems, see inner exception.</exception>
         public async Task<IEnumerable<Song>> GetSongsByArtistAsync(Guid artistId)
         {
             var url = $"https://musicbrainz.org/ws/2/work/?artist={artistId}&limit=1000&inc=artist-rels";
 
-            using (HttpResponseMessage httpResponse = _httpClient.GetAsync(url).Result)
+            try
             {
-                try
-                {
-                    httpResponse.EnsureSuccessStatusCode();
-                    var responseString = await httpResponse.Content.ReadAsStringAsync();
-                    var responseData = JsonSerializer.Deserialize<SongListResponse>(responseString, _jsonSerializerOptions);
+                var httpResponse = await _httpClient.GetAsync(url);
+                httpResponse.EnsureSuccessStatusCode();
+                var responseString = await httpResponse.Content.ReadAsStringAsync();
+                var responseData = JsonSerializer.Deserialize<SongListResponse>(responseString, _jsonSerializerOptions);
 
-                    return responseData.Works.Where((work) => work.Type == WorkConstants.WorkTypes.Song).Select((work) => new Song(work.Id, work.Title));
-                }
-                catch (Exception ex)
+                return responseData.Works.Where((work) => work.Type == WorkConstants.WorkTypes.Song).Select((work) => new Song(work.Id, work.Title));
+            }
+            catch (HttpRequestException ex)
+            {
+                switch (ex.StatusCode)
                 {
-                    throw new ThirdPartyServiceException("Failed to call MusicBrainz API", ex);
+                    case HttpStatusCode.NotFound:
+                        return new List<Song>();
+                    case HttpStatusCode.InternalServerError:
+                    default:
+                        throw new ThirdPartyServiceException("Failed to call MusicBrainz API", ex);
                 }
             }
         }

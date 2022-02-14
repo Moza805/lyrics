@@ -17,6 +17,7 @@ namespace Lyrics.API.Tests.Controllers
     public class LyricsControllerTests
     {
         readonly Mock<IArtistService> _artistServiceMock = new();
+        readonly Mock<ILyricsService> _lyricsServiceMock = new();
 
         #region SearchArtistsByNameAsync
 
@@ -32,7 +33,7 @@ namespace Lyrics.API.Tests.Controllers
             _artistServiceMock.Setup(x => x.FindArtistsByNameAsync("Henge")).ReturnsAsync(serviceResults).Verifiable();
 
             // Test
-            var controller = new LyricsController(_artistServiceMock.Object);
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
             var result = await controller.SearchArtistsByNameAsync("Henge") as OkObjectResult;
 
             // Assert
@@ -52,7 +53,7 @@ namespace Lyrics.API.Tests.Controllers
             _artistServiceMock.Setup(x => x.FindArtistsByNameAsync("Henge")).ReturnsAsync(serviceResults);
 
             // Test
-            var controller = new LyricsController(_artistServiceMock.Object);
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
             var result = await controller.SearchArtistsByNameAsync("Henge") as OkObjectResult;
 
             // Assert
@@ -63,15 +64,10 @@ namespace Lyrics.API.Tests.Controllers
         public async Task SearchArtistsByNameAsync_Returns500ForServiceException()
         {
             // Setup
-            var serviceResults = new List<Artist>
-            {
-                new Artist(Guid.NewGuid(),"Henge","band","Really good live"),
-                new Artist(Guid.NewGuid(),"Henge","person", "Not even real")
-            };
             _artistServiceMock.Setup(x => x.FindArtistsByNameAsync("Henge")).ThrowsAsync(new ThirdPartyServiceException("Rate limited!", new Exception("Too many requests")));
 
             // Test
-            var controller = new LyricsController(_artistServiceMock.Object);
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
             var result = await controller.SearchArtistsByNameAsync("Henge") as StatusCodeResult;
 
             // Assert
@@ -95,7 +91,7 @@ namespace Lyrics.API.Tests.Controllers
             _artistServiceMock.Setup(x => x.GetSongsByArtistAsync(artistGuid)).ReturnsAsync(serviceResults);
 
             // Test
-            var controller = new LyricsController(_artistServiceMock.Object);
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
             var result = await controller.GetSongsForArtistAsync(artistGuid) as OkObjectResult;
 
             // Assert
@@ -116,7 +112,7 @@ namespace Lyrics.API.Tests.Controllers
             _artistServiceMock.Setup(x => x.GetSongsByArtistAsync(artistGuid)).ReturnsAsync(serviceResults);
 
             // Test
-            var controller = new LyricsController(_artistServiceMock.Object);
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
             var result = await controller.GetSongsForArtistAsync(artistGuid) as OkObjectResult;
 
             // Assert
@@ -128,16 +124,65 @@ namespace Lyrics.API.Tests.Controllers
         {
             // Setup
             var artistGuid = Guid.NewGuid();
-            var serviceResults = new List<Song>
-            {
-                new Song(Guid.NewGuid(),"Suro Nipa"),
-                new Song(Guid.NewGuid(),"Shidaa")
-            };
             _artistServiceMock.Setup(x => x.GetSongsByArtistAsync(artistGuid)).ThrowsAsync(new ThirdPartyServiceException("Rate limited!", new Exception("Too many requests")));
 
             // Test
-            var controller = new LyricsController(_artistServiceMock.Object);
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
             var result = await controller.GetSongsForArtistAsync(artistGuid) as StatusCodeResult;
+
+            // Assert
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
+
+        #endregion
+
+        #region GetSongsForArtistAsync
+
+        [Test]
+        public async Task GetLyricsForSongAsync_ReturnsDataRetrievedFromService()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var serviceResults = "These are some lyrics\r\nOn a new line";
+            _lyricsServiceMock.Setup(x => x.GetLyricsForSongAsync("Fake artist", "Song title")).ReturnsAsync(serviceResults).Verifiable();
+
+            // Test
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
+            var result = await controller.GetLyricsForSong("Fake artist", "Song title") as OkObjectResult;
+
+            // Assert
+            _artistServiceMock.Verify();
+            Assert.AreEqual(result.Value, serviceResults);
+        }
+
+        [Test]
+        public async Task GetLyricsForSongAsync_ReturnsOk()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var serviceResults = "These are some lyrics\r\nOn a new line";
+            _lyricsServiceMock.Setup(x => x.GetLyricsForSongAsync("Fake artist", "Song title")).ReturnsAsync(serviceResults);
+
+            // Test
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
+            var result = await controller.GetLyricsForSong("Fake artist", "Song title") as OkObjectResult;
+
+            // Assert
+            Assert.AreEqual((int)HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Test]
+        public async Task GetLyricsForSongAsync_Returns500ForServiceException()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+
+            _lyricsServiceMock.Setup(x => x.GetLyricsForSongAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ThrowsAsync(new ThirdPartyServiceException("Rate limited!", new Exception("Too many requests")));
+
+            // Test
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object);
+            var result = await controller.GetLyricsForSong("Fake artist", "Song title") as StatusCodeResult;
 
             // Assert
             Assert.AreEqual((int)HttpStatusCode.InternalServerError, result.StatusCode);

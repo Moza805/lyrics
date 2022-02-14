@@ -9,10 +9,12 @@ namespace Lyrics.API.Controllers
     public class LyricsController : ControllerBase
     {
         private readonly IArtistService _artistService;
+        private readonly ILyricsService _lyricsService;
 
-        public LyricsController(IArtistService artistService)
+        public LyricsController(IArtistService artistService, ILyricsService lyricsService)
         {
             _artistService = artistService;
+            _lyricsService = lyricsService;
         }
 
         [HttpGet("SearchArtistsByName/{artist}")]
@@ -35,6 +37,20 @@ namespace Lyrics.API.Controllers
             try
             {
                 var result = await _artistService.GetSongsByArtistAsync(artistId);
+                return Ok(result);
+            }
+            catch
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet("GetLyricsForSong/{artist}/{song}")]
+        public async Task<IActionResult> GetLyricsForSong(string artist, string song)
+        {
+            try
+            {
+                var result = await _lyricsService.GetLyricsForSongAsync(artist, song);
                 return Ok(result);
             }
             catch

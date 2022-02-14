@@ -1,5 +1,6 @@
 using Lyrics.API.Controllers;
 using Lyrics.Common.Interfaces;
+using Lyrics.Lyricsovh.Services;
 using Lyrics.MusicBrainz.Services;
 using System.Reflection;
 
@@ -20,6 +21,7 @@ builder.Services.AddScoped<IArtistService, ArtistService>((serviceProvider) =>
         serviceProvider.GetService<HttpClient>()
     );
 });
+builder.Services.AddScoped<ILyricsService, LyricsService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
