@@ -1,8 +1,12 @@
-﻿using Lyrics.Common.Interfaces;
+﻿using Lyrics.Common.Exceptions;
+using Lyrics.Common.Interfaces;
 using Lyrics.Common.Models;
 
 namespace Lyrics.Logic.Services
 {
+    /// <summary>
+    /// A service for getting stats about an artists catalogue of songs
+    /// </summary>
     public class StatisticsService : IStatisticsService
     {
         private readonly IArtistService _artistService;
@@ -14,6 +18,13 @@ namespace Lyrics.Logic.Services
             _lyricsService = lyricsService;
         }
 
+        /// <summary>
+        /// Get statistics for a given artist
+        /// </summary>
+        /// <param name="artistId">Artist ID</param>
+        /// <returns>Statistics such as average, longest, shortest song etc</returns>
+        /// <exception cref="ArtistNotFoundException">No artist found that matches provided <paramref name="artistId"/></exception>
+        /// <exception cref="ThirdPartyServiceException">A third party API did not respond as expected</exception>
         public async Task<ArtistStatistics> GetStatistics(Guid artistId)
         {
             var artist = await _artistService.GetArtistByIdAsync(artistId);

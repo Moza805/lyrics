@@ -1,13 +1,20 @@
 ﻿namespace Lyrics.API
 {
-    public class OutboundRequestLimiter : DelegatingHandler
+    /// <summary>
+    /// Rate limit Http requests
+    /// </summary>
+    public class OutboundHttpRequestLimiter : DelegatingHandler
     {
 
         private SemaphoreSlim _limiter;
 
-        public OutboundRequestLimiter(SemaphoreSlim limiter)
+        /// <summary>
+        /// New up an instance of this request limiter class
+        /// </summary>
+        /// <param name="maxConcurrentRequests">Number of HTTP requests that can be made at the same time</param>
+        public OutboundHttpRequestLimiter(int maxConcurrentRequests)
         {
-            _limiter = limiter;
+            _limiter = new SemaphoreSlim(maxConcurrentRequests);
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

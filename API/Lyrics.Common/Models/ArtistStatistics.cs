@@ -20,9 +20,16 @@ namespace Lyrics.Common.Models
         /// </summary>
         public Song LongestSong
         {
-            get => Songs.Length > 0
-                ? Songs.Aggregate((longest, current) => longest.WordCount > current.WordCount ? longest : current)
-                : null;
+            get
+            {
+                var songsWithLyrics = Songs.Where((song) => song.WordCount > 0);
+                if (songsWithLyrics.Count() == 0)
+                {
+                    return null;
+                }
+
+                return Songs.Aggregate((longest, current) => longest.WordCount > current.WordCount ? longest : current);
+            }
         }
 
 
@@ -31,9 +38,15 @@ namespace Lyrics.Common.Models
         /// </summary>
         public Song ShortestSong
         {
-            get => Songs.Length > 0
-                ? Songs.Where((song) => song.WordCount > 0).Aggregate((shortest, current) => shortest.WordCount < current.WordCount ? shortest : current)
-                : null;
+            get {
+                var songsWithLyrics = Songs.Where((song) => song.WordCount > 0);
+                if(songsWithLyrics.Count() == 0)
+                {
+                    return null;
+                }
+
+                return Songs.Where((song) => song.WordCount > 0).Aggregate((shortest, current) => shortest.WordCount < current.WordCount ? shortest : current);
+            }
         }
 
         /// <summary>
@@ -41,9 +54,15 @@ namespace Lyrics.Common.Models
         /// </summary>
         public double AverageWordsPerSong
         {
-            get => Songs.Length > 0
-                ? Songs.Where((song) => song.WordCount > 0).Select((song) => song.WordCount).Average()
-                : 0;
+            get
+            {
+                var songsWithLyrics = Songs.Where((song) => song.WordCount > 0);
+                if (songsWithLyrics.Count() == 0)
+                {
+                    return 0d;
+                }
+                return Songs.Where((song) => song.WordCount > 0).Select((song) => song.WordCount).Average();
+            }
         }
 
         /// <summary>
@@ -57,7 +76,7 @@ namespace Lyrics.Common.Models
                 // Save a few CPU cycles
                 if (mean == 0)
                 {
-                    return 0;
+                    return 0d;
                 }
 
                 var differencesFromMean = Songs.Where((song) => song.WordCount > 0).Select((song) => Math.Pow(song.WordCount - mean, 2));

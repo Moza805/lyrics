@@ -10,10 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IArtistService, ArtistService>();
-
 builder.Services.AddScoped<ILyricsService, LyricsService>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
+// Add a HttpClient for MusicBrainz which has specific requirements for User-Agent to avoid throttling
+// Request JSON rather than XML
 builder.Services.AddHttpClient<IArtistService, ArtistService>((client) =>
 {
     client.BaseAddress = new Uri(builder.Configuration["MusicBrainz:APIEndpoint"]);
@@ -21,11 +22,12 @@ builder.Services.AddHttpClient<IArtistService, ArtistService>((client) =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
+// Add a HttpClient for Lyricovh API. This service has a rate limiter on it but unsure of limits so you can configure these in appsettings.json
 builder.Services.AddHttpClient<ILyricsService, LyricsService>((client) =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Lyricsovh:APIEndpoint"]);
 })
-.AddHttpMessageHandler(() => new OutboundRequestLimiter(new SemaphoreSlim(Convert.ToInt32(builder.Configuration["Lyricsovh:MaxConcurrentRequests"]))));
+.AddHttpMessageHandler(() => new OutboundHttpRequestLimiter(Convert.ToInt32(builder.Configuration["Lyricsovh:MaxConcurrentRequests"])));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

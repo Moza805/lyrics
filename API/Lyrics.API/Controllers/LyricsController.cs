@@ -1,4 +1,5 @@
-﻿using Lyrics.Common.Interfaces;
+﻿using Lyrics.Common.Exceptions;
+using Lyrics.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -68,6 +69,10 @@ namespace Lyrics.API.Controllers
             {
                 var result = await _statisticsService.GetStatistics(artistId);
                 return Ok(result);
+            }
+            catch(ArtistNotFoundException)
+            {
+                return StatusCode((int)HttpStatusCode.NotFound);
             }
             catch
             {

@@ -47,7 +47,6 @@ namespace Lyrics.Common.Tests.Models
 
             // Assert
             Assert.That(wordCount, Is.EqualTo(0));
-
         }
     }
 }

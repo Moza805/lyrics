@@ -190,5 +190,89 @@ namespace Lyrics.API.Tests.Controllers
         }
 
         #endregion
+
+        #region GetStatisticsForArtistAsync
+
+
+        [Test]
+        public async Task GetStatisticsForArtistAsync_ReturnsDataRetrievedFromService()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var serviceResults = new ArtistStatistics(
+                new Artist(artistGuid, "Jaco Pastorius", "Person", "Bass player extraordinaire"),
+                new Song[]
+                {
+                    new Song(Guid.NewGuid(),"Come On, Come Over") { Lyrics ="Come on, come over"}
+                });
+
+            _statisticsServiceMock.Setup(x => x.GetStatistics(artistGuid)).ReturnsAsync(serviceResults).Verifiable();
+
+            // Test
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object, _statisticsServiceMock.Object);
+            var result = await controller.GetStatisticsForArtistAsync(artistGuid) as OkObjectResult;
+            var data = (ArtistStatistics)result.Value;
+
+            // Assert
+            _statisticsServiceMock.Verify();
+            Assert.IsNotNull(data);
+        }
+
+        [Test]
+        public async Task GetStatisticsForArtistAsync_ReturnsOk()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+            var serviceResults = new ArtistStatistics(
+                new Artist(artistGuid, "Jaco Pastorius", "Person", "Bass player extraordinaire"),
+                new Song[]
+                {
+                    new Song(Guid.NewGuid(),"Come On, Come Over") { Lyrics ="Come on, come over"}
+                });
+
+            _statisticsServiceMock.Setup(x => x.GetStatistics(artistGuid)).ReturnsAsync(serviceResults);
+
+
+            // Test
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object, _statisticsServiceMock.Object);
+            var result = await controller.GetStatisticsForArtistAsync(artistGuid) as OkObjectResult;
+
+            // Assert
+            Assert.AreEqual((int)HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Test]
+        public async Task GetStatisticsForArtistAsync_Returns500ForServiceException()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+
+            _statisticsServiceMock.Setup(x => x.GetStatistics(artistGuid)).ThrowsAsync(new ThirdPartyServiceException("Problems!", new Exception()));
+
+            // Test
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object, _statisticsServiceMock.Object);
+            var result = await controller.GetStatisticsForArtistAsync(artistGuid) as StatusCodeResult;
+
+            // Assert
+            Assert.AreEqual((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
+
+        [Test]
+        public async Task GetStatisticsForArtistAsync_ReturnsNotFoundForInvalidId()
+        {
+            // Setup
+            var artistGuid = Guid.NewGuid();
+
+            _statisticsServiceMock.Setup(x => x.GetStatistics(artistGuid)).ThrowsAsync(new ArtistNotFoundException(artistGuid));
+
+            // Test
+            var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object, _statisticsServiceMock.Object);
+            var result = await controller.GetStatisticsForArtistAsync(artistGuid) as StatusCodeResult;
+
+            // Assert
+            Assert.AreEqual((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
+
+        #endregion
     }
 }

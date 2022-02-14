@@ -81,6 +81,8 @@ namespace Lyrics.MusicBrainz.Services
         /// </summary>
         /// <param name="artistId">Globally unique identifier for the artist in whichever system you are sourcing data from</param>
         /// <returns>Artist details</returns>
+        /// <exception cref="ArtistNotFoundException">No artist found that matches provided <paramref name="artistId"/></exception>
+        /// <exception cref="ThirdPartyServiceException">A third party API did not respond as expected</exception>
         public async Task<Common.Models.Artist> GetArtistByIdAsync(Guid artistId)
         {
             var url = $"ws/2/artist/{artistId}";
