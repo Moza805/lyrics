@@ -36,7 +36,10 @@ namespace Lyrics.API.Tests.Models
             Assert.AreEqual(artistGuid, result.Artist.Id);
             Assert.AreEqual(shortSongGuid, result.ShortestSong.Id);
             Assert.AreEqual(longSongGuid, result.LongestSong.Id);
-            Assert.AreEqual(3, result.NumberOfSongs);
+            Assert.AreEqual(3, result.SongLengths.Length);
+            Assert.AreEqual(4, result.SongLengths[0]);
+            Assert.AreEqual(9, result.SongLengths[1]);
+            Assert.AreEqual(6, result.SongLengths[2]);
             Assert.IsTrue(Math.Abs(4.223d - result.Variance) < 0.01);
             Assert.IsTrue(Math.Abs(6.333 - result.AverageWordsPerSong) < 0.01);
             Assert.IsTrue(Math.Abs(2.05 - result.StandardDeviation) < 0.01);

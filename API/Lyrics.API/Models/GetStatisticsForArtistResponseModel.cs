@@ -5,7 +5,7 @@ namespace Lyrics.API.Models
     public class GetStatisticsForArtistResponseModel
     {
         public Artist Artist { get; set; }
-        public int NumberOfSongs { get; set; }
+        public int[] SongLengths { get; set; }
 
         /// <summary>
         /// The song with the most words in it
@@ -36,7 +36,7 @@ namespace Lyrics.API.Models
         public GetStatisticsForArtistResponseModel(ArtistStatistics artistStatistics)
         {
             Artist = artistStatistics.Artist;
-            NumberOfSongs = artistStatistics.Songs.Length;
+            SongLengths = artistStatistics.Songs.Select(x => x.WordCount).ToArray();
             LongestSong = artistStatistics.LongestSong;
             ShortestSong = artistStatistics.ShortestSong;
             AverageWordsPerSong = artistStatistics.AverageWordsPerSong;

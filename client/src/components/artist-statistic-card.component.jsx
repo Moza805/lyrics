@@ -204,7 +204,7 @@ const ArtistStatisticCard = () => {
                   secondary={artistStatisticData.standardDeviation.toFixed(2)}
                 />
               </Stack>
-              {artistStatisticData.songs.length > 0 && (
+              {artistStatisticData.songLengths.length > 0 && (
                 <Boxplot
                   width={400}
                   height={25}
@@ -212,9 +212,9 @@ const ArtistStatisticCard = () => {
                   min={artistStatisticData.shortestSong?.wordCount || 0}
                   max={artistStatisticData.longestSong?.wordCount || 0}
                   stats={computeBoxplotStats(
-                    artistStatisticData.songs
-                      .filter((song) => song.wordCount > 0)
-                      .map((song) => song.wordCount)
+                    artistStatisticData.songLengths.filter(
+                      (songLength) => songLength > 0
+                    )
                   )}
                 />
               )}

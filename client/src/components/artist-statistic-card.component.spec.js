@@ -47,26 +47,6 @@ describe("Artist statistic card", () => {
           type: "Group",
           disambiguation: "",
         },
-        songs: [
-          {
-            id: "02b0200f-5a13-4196-b01f-debb64a6f6e5",
-            title: "A Song for the Deaf",
-            lyrics: "",
-            wordCount: 128,
-          },
-          {
-            id: "0dbb01c2-4126-4f7c-bd21-9b81f99e92d0",
-            title: "Fairweather Friends",
-            lyrics: "",
-            wordCount: 111,
-          },
-          {
-            id: "15d29c4e-9938-318f-94eb-46b73b88700d",
-            title: "Better Living Through Chemistry",
-            lyrics: "",
-            wordCount: 91,
-          },
-        ],
         longestSong: {
           id: "548d45ab-6afa-4358-a90c-9ab067b4d508",
           title: "Domesticated Animals",
@@ -79,6 +59,7 @@ describe("Artist statistic card", () => {
           lyrics: "[Instrumental]",
           wordCount: 1,
         },
+        songLengths: [128, 111, 91, 235, 1],
         averageWordsPerSong: 121.80701754385964,
         variance: 2031.8399507540782,
         standardDeviation: 45.07593538412795,

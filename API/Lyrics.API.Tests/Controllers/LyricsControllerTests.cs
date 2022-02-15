@@ -222,7 +222,9 @@ namespace Lyrics.API.Tests.Controllers
             _statisticsServiceMock.Verify();
             Assert.IsNotNull(data);
             Assert.AreEqual(artistGuid, data.Artist.Id);
-            Assert.AreEqual(2, data.NumberOfSongs);
+            Assert.AreEqual(2, data.SongLengths.Length);
+            Assert.AreEqual(4, data.SongLengths[0]);
+            Assert.AreEqual(9, data.SongLengths[1]);
             Assert.AreEqual(shortSongGuid, data.ShortestSong.Id);
             Assert.AreEqual(longSongGuid, data.LongestSong.Id);
             Assert.AreEqual(6.25d, data.Variance);
