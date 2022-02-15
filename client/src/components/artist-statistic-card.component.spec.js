@@ -71,8 +71,8 @@ describe("Artist statistic card", () => {
   });
 
   afterEach(() => {
-      axios.get.mockReset();
-  })
+    axios.get.mockReset();
+  });
 
   it("should initialise with search input", async () => {
     render(<ArtistStatisticCard />);
@@ -141,5 +141,77 @@ describe("Artist statistic card", () => {
 
     // Assert
     await screen.findByText(/Pretend this is 235 words/);
+  });
+
+  it("should show an error message when it gets a bad artist search response", async () => {
+    axios.get.mockReset();
+
+    axios.get.mockRejectedValueOnce({
+      status: 500,
+      data: { error: "Problems!" },
+    });
+
+    // Test
+    render(<ArtistStatisticCard />);
+
+    const artistInput = await screen.findByLabelText(/Artist/);
+    fireEvent.change(artistInput, { target: { value: "QOTSA" } });
+
+    const searchButton = await screen.findByText(/Search/);
+    fireEvent.click(searchButton);
+
+    // Assert
+    await screen.findByText(
+      /Ahh shucks, something went wrong. Please refresh and try again./
+    );
+    expect(axios.get).toHaveBeenCalledTimes(1);
+  });
+
+  it("should show an error message when it gets a bad statistics response", async () => {
+    axios.get.mockReset();
+
+    axios.get
+      .mockResolvedValueOnce({
+        status: 200,
+        data: [
+          {
+            id: "7dc8f5bd-9d0b-4087-9f73-dc164950bbd8",
+            name: "Queens of the Stone Age",
+            type: "Group",
+            disambiguation: null,
+          },
+          {
+            id: "5335debb-e4f3-463f-8a4f-215d858be085",
+            name: "Stoneage",
+            type: null,
+            disambiguation: null,
+          },
+        ],
+      })
+      .mockRejectedValueOnce({
+        status: 500,
+        data: { error: "Problems!" },
+      });
+
+    // Test
+    render(<ArtistStatisticCard />);
+
+    const artistInput = await screen.findByLabelText(/Artist/);
+    fireEvent.change(artistInput, { target: { value: "QOTSA" } });
+
+    const searchButton = await screen.findByText(/Search/);
+    fireEvent.click(searchButton);
+
+    const dropdownButton = await screen.findByTestId(/ArrowDropDownIcon/);
+    fireEvent.click(dropdownButton);
+
+    const options = await screen.findAllByRole("option");
+    fireEvent.click(options[1]);
+
+    // Assert
+    await screen.findByText(
+      /Ahh shucks, something went wrong. Please refresh and try again./
+    );
+    expect(axios.get).toHaveBeenCalledTimes(2);
   });
 });

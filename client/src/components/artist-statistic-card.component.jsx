@@ -217,6 +217,14 @@ const ArtistStatisticCard = () => {
             </CardContent>
           </>
         )}
+        {(artistStatisticStatus === FetchStatuses.error ||
+          artistSearchStatus === FetchStatuses.error) && (
+          <CardContent>
+            <Typography variant="body1">
+              Ahh shucks, something went wrong. Please refresh and try again.
+            </Typography>
+          </CardContent>
+        )}
       </Card>
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Box sx={modalStyle}>{modalContent}</Box>
