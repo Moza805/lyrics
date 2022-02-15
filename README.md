@@ -32,6 +32,7 @@ Both projects contain unit tests. The API runs nunit and the UI runs jest with r
 
 - To simplify the calling MusicBrainz you could consider using a third party library (it would also defer the maintenance of this to the third party provider). In researching this, it proved to be more hassle for mocking in tests that it would prove worthwhile for this programming challenge.
 - The API currently has a caching mechanism for calls to Lyrics.ovh API. Under the hood, this is using an in memory cache (`IMemoryCache`) that is not suitable for a distributed environment (think scaling). If the application is to be scaled, an alternative caching mechanism such as [Sql Server or Redis](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-6.0) should be employed.
+- I've spotted that some of the songs without lyrics return with "Instrumental" as the lyrics. This is messing up stats and looks a bit funny when you click on the word count for the shortest song. At this point, I have already stripped out the initial text from lyrics and believe that this is an issue with source data from Lyrics.ovh that should be resolved there rather than bodged further downstream in the Lyrics.API solution.
 
 ## Insomnia requests
 Included at the root of this repo is an Insomnia request definitions file which you can import into [Insomnia](https://insomnia.rest/). It will give you direct access to calls on the built API as well as examples of those performed through to MusicBrainz and Lyrics.ovh
