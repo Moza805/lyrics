@@ -1,4 +1,5 @@
 using Lyrics.API.Controllers;
+using Lyrics.API.Models;
 using Lyrics.Common.Exceptions;
 using Lyrics.Common.Interfaces;
 using Lyrics.Common.Models;
@@ -199,11 +200,15 @@ namespace Lyrics.API.Tests.Controllers
         {
             // Setup
             var artistGuid = Guid.NewGuid();
+            var shortSongGuid = Guid.NewGuid();
+            var longSongGuid = Guid.NewGuid();
+            
             var serviceResults = new ArtistStatistics(
                 new Artist(artistGuid, "Jaco Pastorius", "Person", "Bass player extraordinaire"),
                 new Song[]
                 {
-                    new Song(Guid.NewGuid(),"Come On, Come Over") { Lyrics ="Come on, come over"}
+                    new Song(shortSongGuid, "Come On, Come Over") { Lyrics ="Come on, come over"},
+                    new Song(longSongGuid, "Another song") { Lyrics = "This song isn't real but it has more words" }
                 });
 
             _statisticsServiceMock.Setup(x => x.GetStatistics(artistGuid)).ReturnsAsync(serviceResults).Verifiable();
@@ -211,11 +216,18 @@ namespace Lyrics.API.Tests.Controllers
             // Test
             var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object, _statisticsServiceMock.Object);
             var result = await controller.GetStatisticsForArtistAsync(artistGuid) as OkObjectResult;
-            var data = (result.Value) as ArtistStatistics;
+            var data = (result.Value) as GetStatisticsForArtistResponseModel;
 
             // Assert
             _statisticsServiceMock.Verify();
             Assert.IsNotNull(data);
+            Assert.AreEqual(artistGuid, data.Artist.Id);
+            Assert.AreEqual(2, data.NumberOfSongs);
+            Assert.AreEqual(shortSongGuid, data.ShortestSong.Id);
+            Assert.AreEqual(longSongGuid, data.LongestSong.Id);
+            Assert.AreEqual(6.25d, data.Variance);
+            Assert.AreEqual(6.5d, data.AverageWordsPerSong);
+            Assert.AreEqual(2.5d, data.StandardDeviation);
         }
 
         [Test]
