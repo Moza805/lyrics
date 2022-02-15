@@ -3,6 +3,7 @@
     /// <summary>
     /// Rate limit Http requests
     /// </summary>
+    /// <seealso cref="https://stackoverflow.com/a/52053084" />
     public class OutboundHttpRequestLimiter : DelegatingHandler
     {
 

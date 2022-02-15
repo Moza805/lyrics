@@ -4,9 +4,14 @@ using Lyrics.Common.Interfaces;
 using Lyrics.Logic.Services;
 using Lyrics.Lyricsovh.Services;
 using Lyrics.MusicBrainz.Services;
+using Microsoft.Extensions.Caching.Memory;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add memory caching
+builder.Services.AddMemoryCache();
+
 
 // Add services to the container.
 builder.Services.AddScoped<IArtistService, ArtistService>();
@@ -22,12 +27,15 @@ builder.Services.AddHttpClient<IArtistService, ArtistService>((client) =>
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
 
-// Add a HttpClient for Lyricovh API. This service has a rate limiter on it but unsure of limits so you can configure these in appsettings.json
+// Add a HttpClient for Lyricovh API.
+// This service has a rate limiter on it but unsure of limits so you can configure these in appsettings.json
+// This service has caching on to prevent unnecessary calls to the API
 builder.Services.AddHttpClient<ILyricsService, LyricsService>((client) =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Lyricsovh:APIEndpoint"]);
 })
-.AddHttpMessageHandler(() => new OutboundHttpRequestLimiter(Convert.ToInt32(builder.Configuration["Lyricsovh:MaxConcurrentRequests"])));
+    .AddHttpMessageHandler((serviceProvider) => new InMemoryLyricsovhResponseCache(serviceProvider.GetService<IMemoryCache>()))
+    .AddHttpMessageHandler(() => new OutboundHttpRequestLimiter(Convert.ToInt32(builder.Configuration["Lyricsovh:MaxConcurrentRequests"])));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
