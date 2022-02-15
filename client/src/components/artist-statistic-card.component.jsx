@@ -34,21 +34,29 @@ const modalStyle = {
 
 const ArtistStatisticCard = () => {
   const [artistSearchTerm, setArtistSearchTerm] = useState("");
+
+  // Manages state updates for artist search results based on promise status e.g. idle, pending, resolved, error
   const [artistSearchStatus, artistSearchData, setArtistSearchPromise] =
     useAxiosFetch();
+
+  // Manages state updates for artist statistics based on promise status e.g. idle, pending, resolved, error
   const [
     artistStatisticStatus,
     artistStatisticData,
     setArtistStatisticPromise,
   ] = useAxiosFetch();
 
+  // State for the Lyrics popover
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState("😜");
+  const [modalContent, setModalContent] = useState("");
 
   const { lyricsApi } = useContext(ConfigurationContext);
 
   const handleSearchClick = (e) => {
+    // don't trigger a page submit
     e.preventDefault();
+
+    // Call out for artists by name
     setArtistSearchPromise(
       lyricsApi.SearchArtistsByNameAsync(artistSearchTerm).then((response) => {
         response.data = response.data.map((artist) => {

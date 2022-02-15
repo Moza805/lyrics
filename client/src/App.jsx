@@ -16,12 +16,14 @@ import { ConfigurationProvider } from "./contexts/configuration.context";
 import "./App.css";
 
 const App = () => {
+  // Array of Artists statistic card elements to be rendered
   const [searches, setSearches] = useState([
     <Grid item>
       <ArtistStatisticCard />
     </Grid>,
   ]);
 
+  // Add another card
   const handleCheckAnotherArtistClick = () => {
     setSearches([
       ...searches,
