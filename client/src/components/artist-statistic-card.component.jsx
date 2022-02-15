@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -17,6 +16,7 @@ import {
 import Boxplot, { computeBoxplotStats } from "react-boxplot";
 
 import { useAxiosFetch, FetchStatuses } from "../hooks/use-axios-fetch.hook";
+import { ConfigurationContext } from "../contexts/configuration.context";
 
 const modalStyle = {
   position: "absolute",
@@ -45,38 +45,28 @@ const ArtistStatisticCard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("😜");
 
+  const { lyricsApi } = useContext(ConfigurationContext);
+
   const handleSearchClick = (e) => {
     e.preventDefault();
     setArtistSearchPromise(
-      axios
-        .get(
-          `https://localhost:7186/SearchArtistsByName/${encodeURIComponent(
-            artistSearchTerm
-          )}`
-        )
-        .then((response) => {
-          response.data = response.data.map((artist) => {
-            const label =
-              artist.disambiguation === null
-                ? artist.name
-                : `${artist.name} (${artist.disambiguation})`;
+      lyricsApi.SearchArtistsByNameAsync(artistSearchTerm).then((response) => {
+        response.data = response.data.map((artist) => {
+          const label =
+            artist.disambiguation === null
+              ? artist.name
+              : `${artist.name} (${artist.disambiguation})`;
 
-            return { label, id: artist.id };
-          });
+          return { label, id: artist.id };
+        });
 
-          return response;
-        })
+        return response;
+      })
     );
   };
 
   const handleArtistChange = (event, newValue) => {
-    setArtistStatisticPromise(
-      axios.get(
-        `https://localhost:7186/GetStatisticsForArtist/${encodeURIComponent(
-          newValue.id
-        )}`
-      )
-    );
+    setArtistStatisticPromise(lyricsApi.GetStatisticsForArtistAsync(newValue.id));
   };
 
   const openModalWithContent = (content) => {

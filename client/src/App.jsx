@@ -1,3 +1,4 @@
+import { useState, cloneElement } from "react";
 import {
   Button,
   Card,
@@ -8,10 +9,11 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useState, cloneElement } from "react";
+
+import ArtistStatisticCard from "./components/artist-statistic-card.component";
+import { ConfigurationProvider } from "./contexts/configuration.context";
 
 import "./App.css";
-import ArtistStatisticCard from "./components/artist-statistic-card.component";
 
 const App = () => {
   const [searches, setSearches] = useState([
@@ -35,22 +37,24 @@ const App = () => {
         <h1>Lyrics Analyser</h1>
       </header>
       <main className="App-main" role="main">
-        <Paper>
-          <Container>
-            <Grid container spacing={2}>
-              {searches.map((Element, key) => cloneElement(Element, { key }))}
-              <Grid item>
-                <Card sx={{ width: 500, height: 500 }} elevation={5}>
-                  <CardContent>
-                    <Button onClick={handleCheckAnotherArtistClick}>
-                      Check another artist
-                    </Button>
-                  </CardContent>
-                </Card>
+        <ConfigurationProvider>
+          <Paper>
+            <Container>
+              <Grid container spacing={2}>
+                {searches.map((Element, key) => cloneElement(Element, { key }))}
+                <Grid item>
+                  <Card sx={{ width: 500, height: 500 }} elevation={5}>
+                    <CardContent>
+                      <Button onClick={handleCheckAnotherArtistClick}>
+                        Check another artist
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
-            </Grid>
-          </Container>
-        </Paper>
+            </Container>
+          </Paper>
+        </ConfigurationProvider>
       </main>
       <footer className="App-footer" role="contentinfo">
         <Typography component="p">
