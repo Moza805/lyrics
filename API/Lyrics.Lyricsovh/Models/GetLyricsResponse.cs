@@ -28,7 +28,7 @@ namespace Lyrics.Lyricsovh.Models
                 {
                     return Array.Empty<string>();
                 }
-                return Lyrics.Split("\r\n");
+                return Lyrics.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             }
         }
     }

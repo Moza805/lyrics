@@ -3,6 +3,7 @@ using Lyrics.Common.Interfaces;
 using Lyrics.Lyricsovh.Models;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.RegularExpressions;
 
 namespace Lyrics.Lyricsovh.Services
 {
@@ -33,8 +34,7 @@ namespace Lyrics.Lyricsovh.Services
             try
             {
                 var responseData = await _client.GetFromJsonAsync<GetLyricsResponse>(url);
-
-                return responseData.Lyrics;
+                return Regex.Replace(responseData.Lyrics, @"^P.*\r\n", "");
             }
             catch (HttpRequestException ex)
             {

@@ -12,6 +12,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add memory caching
 builder.Services.AddMemoryCache();
 
+// Enable CORS
+builder.Services.AddCors((options) =>
+{
+    options.AddDefaultPolicy((policyBuilder) =>
+    {
+        policyBuilder
+            .AllowAnyHeader()
+            .WithMethods("GET", "OPTIONS")
+            .AllowAnyOrigin();
+    });
+});
+
 
 // Add services to the container.
 builder.Services.AddScoped<IArtistService, ArtistService>();
@@ -53,6 +65,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
