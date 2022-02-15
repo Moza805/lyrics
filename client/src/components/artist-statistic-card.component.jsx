@@ -74,7 +74,9 @@ const ArtistStatisticCard = () => {
   };
 
   const handleArtistChange = (event, newValue) => {
-    setArtistStatisticPromise(lyricsApi.GetStatisticsForArtistAsync(newValue.id));
+    setArtistStatisticPromise(
+      lyricsApi.GetStatisticsForArtistAsync(newValue.id)
+    );
   };
 
   const openModalWithContent = (content) => {
@@ -100,8 +102,10 @@ const ArtistStatisticCard = () => {
                 onChange={(e) => setArtistSearchTerm(e.target.value)}
                 autoComplete="off"
                 autoFocus={true}
-              ></TextField>
+              />
+              <br />
               <Button
+                sx={{ m: 1 }}
                 type="submit"
                 variant="contained"
                 onClick={handleSearchClick}
@@ -173,8 +177,10 @@ const ArtistStatisticCard = () => {
                         openModalWithContent(
                           artistStatisticData.shortestSong.lyrics
                             .split(/\r?\n/)
-                            .map((line) => (
-                              <Typography variant="body1">{line}</Typography>
+                            .map((line, key) => (
+                              <Typography variant="body1" key={key}>
+                                {line}
+                              </Typography>
                             ))
                         )
                       }
