@@ -200,7 +200,7 @@ namespace Lyrics.MusicBrainz.Tests.Services
         }
 
         [Test]
-        public async Task GetArtistByIdAsync_HandlesInvalidId()
+        public void GetArtistByIdAsync_HandlesInvalidId()
         {
             // Setup
             var artistGuid = Guid.NewGuid();

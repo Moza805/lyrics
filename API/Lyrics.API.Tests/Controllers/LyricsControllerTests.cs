@@ -211,7 +211,7 @@ namespace Lyrics.API.Tests.Controllers
             // Test
             var controller = new LyricsController(_artistServiceMock.Object, _lyricsServiceMock.Object, _statisticsServiceMock.Object);
             var result = await controller.GetStatisticsForArtistAsync(artistGuid) as OkObjectResult;
-            var data = (ArtistStatistics)result.Value;
+            var data = (result.Value) as ArtistStatistics;
 
             // Assert
             _statisticsServiceMock.Verify();

@@ -35,7 +35,7 @@ namespace Lyrics.Lyricsovh.Tests.Services
         }
 
         [Test]
-        public async Task GetLyricsForSongAsync_HandlesThirdPartyErrors()
+        public void GetLyricsForSongAsync_HandlesThirdPartyErrors()
         {
             // Setup
             var mockedResponse = MockHttpMessageHandler.MockResponse("Oh no, an error!", HttpStatusCode.InternalServerError);
