@@ -8,8 +8,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.API", "Lyrics.API\Ly
 		{D3B68C0E-61BF-4354-AD8D-5F0FD7119682} = {D3B68C0E-61BF-4354-AD8D-5F0FD7119682}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.MusicBrainz", "MusicBrainz\Lyrics.MusicBrainz.csproj", "{B49EA171-AA31-4E35-9063-24224D05D45B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.Common", "Lyrics.Common\Lyrics.Common.csproj", "{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.API.Tests", "Lyrics.API.Tests\Lyrics.API.Tests.csproj", "{CE8D6353-CE74-48F0-8B03-837026C01154}"
@@ -21,13 +19,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Lyricsovh", "Lyrics.Lyricsovh\Lyrics.Lyricsovh.csproj", "{D3B68C0E-61BF-4354-AD8D-5F0FD7119682}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.Lyricsovh", "Lyrics.Lyricsovh\Lyrics.Lyricsovh.csproj", "{D3B68C0E-61BF-4354-AD8D-5F0FD7119682}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Lyricsovh.Tests", "Lyrics.Lyricsovh.Tests\Lyrics.Lyricsovh.Tests.csproj", "{1DF505E9-67DB-4F14-8EA5-4EB9767A4CF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.Lyricsovh.Tests", "Lyrics.Lyricsovh.Tests\Lyrics.Lyricsovh.Tests.csproj", "{1DF505E9-67DB-4F14-8EA5-4EB9767A4CF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Logic", "Lyrics.Logic\Lyrics.Logic.csproj", "{4ED56CA1-A85C-4ECA-A5B6-331843CF8248}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.Logic", "Lyrics.Logic\Lyrics.Logic.csproj", "{4ED56CA1-A85C-4ECA-A5B6-331843CF8248}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lyrics.Common.Tests", "Lyrics.Common.Tests\Lyrics.Common.Tests.csproj", "{7E4153CE-FEC4-4A7E-93CD-651186484CA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.Common.Tests", "Lyrics.Common.Tests\Lyrics.Common.Tests.csproj", "{7E4153CE-FEC4-4A7E-93CD-651186484CA8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lyrics.MusicBrainz", "Lyrics.MusicBrainz\Lyrics.MusicBrainz.csproj", "{ABFCA251-B9C1-425E-9287-DFB08958FF50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +39,6 @@ Global
 		{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7A2A96C-87FF-4618-9F97-E48DCB335FD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B49EA171-AA31-4E35-9063-24224D05D45B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B49EA171-AA31-4E35-9063-24224D05D45B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B49EA171-AA31-4E35-9063-24224D05D45B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B49EA171-AA31-4E35-9063-24224D05D45B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B906BAA3-848E-4DAC-9D1A-53A748FEDFED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,6 +67,10 @@ Global
 		{7E4153CE-FEC4-4A7E-93CD-651186484CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E4153CE-FEC4-4A7E-93CD-651186484CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E4153CE-FEC4-4A7E-93CD-651186484CA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABFCA251-B9C1-425E-9287-DFB08958FF50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABFCA251-B9C1-425E-9287-DFB08958FF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABFCA251-B9C1-425E-9287-DFB08958FF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABFCA251-B9C1-425E-9287-DFB08958FF50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

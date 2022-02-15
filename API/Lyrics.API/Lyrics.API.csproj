@@ -22,7 +22,7 @@
     <ProjectReference Include="..\Lyrics.Common\Lyrics.Common.csproj" />
     <ProjectReference Include="..\Lyrics.Logic\Lyrics.Logic.csproj" />
     <ProjectReference Include="..\Lyrics.Lyricsovh\Lyrics.Lyricsovh.csproj" />
-    <ProjectReference Include="..\MusicBrainz\Lyrics.MusicBrainz.csproj" />
+    <ProjectReference Include="..\Lyrics.MusicBrainz\Lyrics.MusicBrainz.csproj" />
   </ItemGroup>
 
 </Project>

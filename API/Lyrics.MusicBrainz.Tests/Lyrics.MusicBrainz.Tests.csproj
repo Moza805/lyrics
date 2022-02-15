@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MusicBrainz\Lyrics.MusicBrainz.csproj" />
+    <ProjectReference Include="..\Lyrics.MusicBrainz\Lyrics.MusicBrainz.csproj" />
   </ItemGroup>
 
 </Project>
